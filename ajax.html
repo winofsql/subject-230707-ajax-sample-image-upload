@@ -1,0 +1,45 @@
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+
+<script>
+$(function(){
+
+    $("#btn").on( "click", file_upload );
+
+});
+
+function file_upload() {
+
+    var formData = new FormData();
+
+    // 画像データサイズの制限
+    formData.append("MAX_FILE_SIZE", 1000000);
+
+    // formData に画像ファイルを追加
+    formData.append("image", $("#file").get(0).files[0]);
+
+    $.ajax({
+        url: "http://localhost/php-0707-01/php-board-v11-image-upload/upload.php",
+        type: "POST",
+        data: formData,
+        processData: false,  // jQuery がデータを処理しないよう指定
+        contentType: false   // jQuery が contentType を設定しないよう指定
+    })
+    .done(function( data, textStatus ){
+        console.log( "status:" + textStatus );
+        console.log( "data:" + JSON.stringify(data, null, "    ") );
+
+    })
+    .fail(function(jqXHR, textStatus, errorThrown ){
+        console.log( "status:" + textStatus );
+        console.log( "errorThrown:" + errorThrown );
+    })
+    .always(function() {
+
+        // 操作不可を解除
+        $("#content input").prop("disabled", false);
+    })
+    ;
+}
+</script>
+<input type="file" name="file" id="file" accept=".jpg,.jpeg">
+<input id="btn" name="btn" type="button" value="実行">
